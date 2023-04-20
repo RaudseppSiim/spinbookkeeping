@@ -1,0 +1,12 @@
+version: '2'
+services:
+  custom-apache:
+    build:
+      context: .
+      dockerfile: ./apache/Dockerfile
+    image: php:8.2-apache
+    ports:
+      - 80:80
+      - 443:8443
+    volumes:
+      - ./src:/var/www/html

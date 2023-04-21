@@ -27,6 +27,11 @@ class PaymentController extends BaseController
                         throw new Exception("Ei õnnestunud luua kuu ".$month." palga kuupäeva");
                     }
                     $monthNothificationDay = date('Y-m-d', strtotime($monthPayDay. ' - '.NOTIFICATION_DAY_BEFORE.' days'));
+                    $monthNothificationDay = $this->getPaymentDate( 
+                        intval(date('d', strtotime($monthNothificationDay))),
+                        intval(date('m', strtotime($monthNothificationDay))),
+                        intval(date('Y', strtotime($monthNothificationDay)))
+                    );
                     $returnArray[] = array(
                         strtolower($this->getAllMonthNamesArray()[$month-1]) => 
                             array(

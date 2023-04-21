@@ -24,7 +24,7 @@ trait DateHelper
             if($this->isEstonianHoliday($paymentDay->format('Y-m-d'))){
                 $paymentDay = new DateTime(date('Y-m-d', strtotime($paymentDay->format('Y-m-d'). ' - 1 days')));
             }
-            $weekday = date_format($paymentDay,"N");
+            $weekday = intval(date_format($paymentDay,"N"));
             if($weekday < 6 && $weekday >= 1){
                 return $paymentDay->format('Y-m-d');
             }

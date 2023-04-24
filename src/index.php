@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . "/inc/bootstrap.php";
-
+    error_reporting(0);
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $uri = explode( '/', $uri );
     $urilength = count($uri) - 1;

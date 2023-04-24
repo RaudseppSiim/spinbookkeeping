@@ -30,7 +30,11 @@ trait DateHelper
             }
             else{
                 $daysToDecrease = $weekday - 5;
-                return date('Y-m-d', strtotime($paymentDay->format('Y-m-d'). ' - '.$daysToDecrease.' days'));
+                $decresedDay = date('Y-m-d', strtotime($paymentDay->format('Y-m-d'). ' - '.$daysToDecrease.' days'));
+                if($this->isEstonianHoliday($decresedDay)){
+                    return date('Y-m-d', strtotime($decresedDay. ' -1 days'));
+                }
+                return $decresedDay;
             }
         }
     }
@@ -40,7 +44,7 @@ trait DateHelper
             // Fixed holidays
             '01-01', // Uusaasta
             '02-24', // Iseseisvuspäev
-            '03-07', // Suur reede
+            $this->calculateGoodFriday((int)date('Y', strtotime($date))), // Suur reede
             '05-01', // Kevadpüha
             '06-23', // Võidupüha
             '06-24', // Jaanipäev
@@ -52,6 +56,24 @@ trait DateHelper
     
         $date_formatted = date('m-d', strtotime($date));
         return in_array($date_formatted, $holidays);
+    }
+
+    private function calculateGoodFriday($year){
+        // calculate Easter Sunday
+        $g = $year % 19;
+        $c = $year / 100;
+        $h = ($c - ($c / 4) - ((8 * $c + 13) / 25) + 19 * $g + 15) % 30;
+        $i = $h - ($h / 28) * (1 - ($h / 28) * (29 / ($h + 1)) * ((21 - $g) / 11));
+        $day = $i - (($year + ($year / 4) + $i + 2 - $c + ($c / 4)) % 7) + 28;
+        $month = 3;
+    
+        if ($day > 31)
+        {
+            $month++;
+            $day -= 31;
+        }
+        //return good friday
+        return date("m-d", strtotime($year."-".ceil($month)."-".ceil($day)." -2 days"));
     }
 
 }
